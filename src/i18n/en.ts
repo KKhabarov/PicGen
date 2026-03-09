@@ -42,6 +42,12 @@ export const en: Record<string, string> = {
   'buy.invoice_description': '{credits} credits for AI image generation in PicGen',
   'buy.success': '✅ Payment successful! {credits} credits added.\n\nYour balance: {total} credits.',
 
+  // Payment (mock mode)
+  'payment.mock_confirm': '💳 {pack}\n\n{credits} credits for {price}₽\n\n⚠️ Test mode: payment is processed automatically.',
+  'payment.mock_confirm_btn': '✅ Confirm purchase',
+  'payment.mock_success': '✅ Purchase successful! {credits} credits added.\n\n💰 Your balance: {balance} credits',
+  'payment.mock_cancelled': '❌ Purchase cancelled',
+
   // History
   'history.title': '📚 Generation History',
   'history.empty': '📭 History is empty. Create your first image with /generate',

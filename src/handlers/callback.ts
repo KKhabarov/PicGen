@@ -22,7 +22,7 @@ import {
   adminCommand,
   executeBroadcast,
 } from '../commands/admin.js';
-import { sendInvoice } from './payment.js';
+import { sendInvoice, handleMockBuyConfirm } from './payment.js';
 import { logger } from '../utils/logger.js';
 import { truncate } from '../utils/helpers.js';
 
@@ -167,6 +167,20 @@ async function routeCallback(ctx: BotContext, bot: Bot<BotContext>, data: string
     const packId = data.slice(4);
     await ctx.answerCallbackQuery();
     await sendInvoice(ctx, packId);
+    return;
+  }
+
+  // Mock payment confirm
+  if (data.startsWith('mock_buy_confirm:')) {
+    const packId = data.slice(17);
+    await handleMockBuyConfirm(ctx, packId);
+    return;
+  }
+
+  // Mock payment cancel
+  if (data === 'mock_buy_cancel') {
+    await ctx.editMessageText(ctx.t('payment.mock_cancelled'));
+    await ctx.answerCallbackQuery();
     return;
   }
 

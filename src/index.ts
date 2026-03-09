@@ -2,9 +2,14 @@ import { createBot } from './bot.js';
 import { createGenerationWorker } from './queues/generation.worker.js';
 import { prisma } from './services/user.js';
 import { logger } from './utils/logger.js';
+import { config } from './config.js';
 
 async function main() {
   logger.info('Starting PicGen bot...');
+
+  if (config.isPaymentMockMode) {
+    logger.warn('⚠️ Payment mock mode is active. Set PAYMENT_PROVIDER_TOKEN to enable real payments.');
+  }
 
   // Start BullMQ worker
   const worker = createGenerationWorker();

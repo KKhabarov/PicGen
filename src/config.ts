@@ -33,6 +33,7 @@ export const config = {
   databaseUrl: parsed.data.DATABASE_URL,
   redisUrl: parsed.data.REDIS_URL,
   paymentProviderToken: parsed.data.PAYMENT_PROVIDER_TOKEN,
+  isPaymentMockMode: !parsed.data.PAYMENT_PROVIDER_TOKEN || parsed.data.PAYMENT_PROVIDER_TOKEN.startsWith('your_'),
   nodeEnv: parsed.data.NODE_ENV,
   logLevel: parsed.data.LOG_LEVEL,
   botUsername: parsed.data.BOT_USERNAME,

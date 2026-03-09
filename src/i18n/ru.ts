@@ -42,6 +42,12 @@ export const ru: Record<string, string> = {
   'buy.invoice_description': '{credits} кредитов для генерации изображений в PicGen',
   'buy.success': '✅ Оплата прошла успешно! Начислено {credits} кредитов.\n\nВаш баланс: {total} кредитов.',
 
+  // Payment (mock mode)
+  'payment.mock_confirm': '💳 {pack}\n\n{credits} кредитов за {price}₽\n\n⚠️ Тестовый режим: оплата проходит автоматически.',
+  'payment.mock_confirm_btn': '✅ Подтвердить покупку',
+  'payment.mock_success': '✅ Покупка успешна! Начислено {credits} кредитов.\n\n💰 Ваш баланс: {balance} кредитов',
+  'payment.mock_cancelled': '❌ Покупка отменена',
+
   // History
   'history.title': '📚 История генераций',
   'history.empty': '📭 История пуста. Создайте первое изображение с /generate',
