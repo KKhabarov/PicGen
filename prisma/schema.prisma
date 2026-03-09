@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  telegramId    BigInt   @unique
+  username      String?
+  firstName     String
+  lastName      String?
+  language      String   @default("ru")
+  credits       Int      @default(0)
+  freeCredits   Int      @default(3)
+  isAdmin       Boolean  @default(false)
+  isBanned      Boolean  @default(false)
+  referralCode  String   @unique
+  referredById  Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  referredBy    User?        @relation("Referrals", fields: [referredById], references: [id])
+  referrals     User[]       @relation("Referrals")
+  generations   Generation[]
+  payments      Payment[]
+  referralsMade Referral[]   @relation("ReferrerUser")
+  referredIn    Referral?    @relation("ReferredUser")
+  promoUsages   PromoCodeUsage[]
+}
+
+enum GenerationStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model Generation {
+  id           Int              @id @default(autoincrement())
+  userId       Int
+  prompt       String
+  style        String?
+  aspectRatio  String           @default("1:1")
+  resolution   String           @default("1k")
+  imageUrl     String?
+  status       GenerationStatus @default(PENDING)
+  creditsUsed  Int
+  taskId       String?
+  errorMessage String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  REFUNDED
+}
+
+model Payment {
+  id                 Int           @id @default(autoincrement())
+  userId             Int
+  amount             Decimal
+  credits            Int
+  currency           String        @default("RUB")
+  telegramPaymentId  String        @unique
+  status             PaymentStatus @default(PENDING)
+  createdAt          DateTime      @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Referral {
+  id           Int      @id @default(autoincrement())
+  referrerId   Int
+  referredId   Int      @unique
+  bonusCredits Int
+  createdAt    DateTime @default(now())
+
+  referrer User @relation("ReferrerUser", fields: [referrerId], references: [id])
+  referred User @relation("ReferredUser", fields: [referredId], references: [id])
+}
+
+model PromoCode {
+  id        Int       @id @default(autoincrement())
+  code      String    @unique
+  credits   Int
+  maxUses   Int
+  usedCount Int       @default(0)
+  expiresAt DateTime?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+
+  usages PromoCodeUsage[]
+}
+
+model PromoCodeUsage {
+  id          Int      @id @default(autoincrement())
+  promoCodeId Int
+  userId      Int
+  createdAt   DateTime @default(now())
+
+  promoCode PromoCode @relation(fields: [promoCodeId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@unique([promoCodeId, userId])
+}
